@@ -4,12 +4,15 @@ output: github_document
 date: "2025-09-21"
 ---
 
+# Problem 1
+## Load Libraries and Datasets
 ```{r}
 library(tidyverse)
 library(moderndive)
 data("early_january_weather")
 ```
 
+## Exploratory Data Analysis and Scatterplot
 ```{r}
 nrow(early_january_weather)
 ncol(early_january_weather)
@@ -19,16 +22,18 @@ ggplot(early_january_weather, aes(x = time_hour, y = temp, color = humid)) + geo
 ggsave("early_january_weather_scatterplot.pdf", height = 4, width = 6)
 ```
 
-There are 15 variables in this dataset: origin, year, month, day, hour, temperature, dew point, humidity, wind direction, wind gust, precipitation, pressure, visibility, andd time in hours. 
+There are 15 variables in this dataset: origin, year, month, day, hour, temperature, dew point, humidity, wind direction, wind speed, wind gust, precipitation, pressure, visibility, and time in hours. 
 
 Meaningful variables include time in hours, temperature, and humidity.
 
 There are 358 rows and 15 columns in this early_january_weather dataset. 
 The mean temperature is 39.58212 Fahrenheit. 
 
-Even there is is considerable variabiliy in temperature and humidity, the average temperature increases as the days pass in January. Furthermore, the average humidity increases as the days pass in January. 
+While there is is considerable variabiliy in temperature and humidity, the average temperature increases as the days pass in January. Furthermore, the average humidity increases as the days pass in January. 
 
+# Problem 2 
 
+## Create Dataset and Caluclate Variable Means
 ```{r}
 hw_df = tibble(
   samp = rnorm(10),
@@ -37,24 +42,22 @@ hw_df = tibble(
   vec_factor = factor(c("Low", "Medium", "High", "Low", "Medium", "High", "Low", "Medium", "High", "Low"))
 )
 
-mean(hw_df$samp)
-mean(hw_df$greater_zero)
-mean(hw_df$vec_char)
-mean(hw_df$vec_factor)
+mean(pull(hw_df, samp))
+mean(pull(hw_df, greater_zero))
+mean(pull(hw_df, vec_char))
+mean(pull(hw_df, vec_factor))
 ```
+
 The only variables that were able to compute the mean were the rnom sampling variable and the greater than zero variable because these are numeric variables. It doesn't make sense to take the mean of a character or a factor variable. 
 
-```{r}
-numeric_logical = as.numeric(hw_df$greater_zero)
-numeric_char = as.numeric(hw_df$vec_char)
-numeric_factor = as.numeric(hw_df$vec_factor)
-
+## Convert Variables to Numeric
+```{r, eval = FALSE}
 new_hw_df = tibble(
   samp = rnorm(10),
-  greater_zero = numeric_logical,
-  vec_char = numeric_char,
-  vec_factor = numeric_factor
+  greater_zero = as.numeric(hw_df$greater_zero),
+  vec_char = as.numeric(hw_df$vec_char),
+  vec_factor = as.numeric(hw_df$vec_factor)
 )
 ```
 
-When you try and force the logical, character, and factor variables, NA's are force into the character vectors and the logical and factor variables are changed to numbers instead of their original values. This helps explain the errors in taking the means of the original values of the variables because character vectors have no way of being numerical while the logical and factor variables have to change their values to make sense as a numerical value. 
+When you try and force the logical, character, and factor variables, NA's are force into the character vectors and the logical and factor variables are changed to numbers instead of their original values. This helps explain the errors in taking the means of the original values of these variables because character vectors have no way of being numerical while the logical and factor variables have to change their values to make sense as a numerical value. 
