@@ -4,26 +4,57 @@ output: github_document
 date: "2025-09-21"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r}
+library(tidyverse)
+library(moderndive)
+data("early_january_weather")
 ```
 
-## R Markdown
+```{r}
+nrow(early_january_weather)
+ncol(early_january_weather)
+mean(early_january_weather$temp)
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+ggplot(early_january_weather, aes(x = time_hour, y = temp, color = humid)) + geom_point()
+ggsave("early_january_weather_scatterplot.pdf", height = 4, width = 6)
 ```
 
-## Including Plots
+There are 15 variables in this dataset: origin, year, month, day, hour, temperature, dew point, humidity, wind direction, wind gust, precipitation, pressure, visibility, andd time in hours. 
 
-You can also embed plots, for example:
+Meaningful variables include time in hours, temperature, and humidity.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+There are 358 rows and 15 columns in this early_january_weather dataset. 
+The mean temperature is 39.58212 Fahrenheit. 
+
+Even there is is considerable variabiliy in temperature and humidity, the average temperature increases as the days pass in January. Furthermore, the average humidity increases as the days pass in January. 
+
+
+```{r}
+hw_df = tibble(
+  samp = rnorm(10),
+  greater_zero = samp > 0, 
+  vec_char = c("Hello", "My", "name", "is", "Edmund", "Wong", "I", "am", "studying", "Biostatistics"),
+  vec_factor = factor(c("Low", "Medium", "High", "Low", "Medium", "High", "Low", "Medium", "High", "Low"))
+)
+
+mean(hw_df$samp)
+mean(hw_df$greater_zero)
+mean(hw_df$vec_char)
+mean(hw_df$vec_factor)
+```
+The only variables that were able to compute the mean were the rnom sampling variable and the greater than zero variable because these are numeric variables. It doesn't make sense to take the mean of a character or a factor variable. 
+
+```{r}
+numeric_logical = as.numeric(hw_df$greater_zero)
+numeric_char = as.numeric(hw_df$vec_char)
+numeric_factor = as.numeric(hw_df$vec_factor)
+
+new_hw_df = tibble(
+  samp = rnorm(10),
+  greater_zero = numeric_logical,
+  vec_char = numeric_char,
+  vec_factor = numeric_factor
+)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+When you try and force the logical, character, and factor variables, NA's are force into the character vectors and the logical and factor variables are changed to numbers instead of their original values. This helps explain the errors in taking the means of the original values of the variables because character vectors have no way of being numerical while the logical and factor variables have to change their values to make sense as a numerical value. 
